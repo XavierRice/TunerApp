@@ -1,10 +1,6 @@
 const express = require("express");
 const songs = express.Router();
-const { getAllSongs, getSong ,createSong } = require("../queries/songs.js");
-
-
-let allTheSongs = [];
-
+const { getAllSongs, getSong ,createSong, deleteSong } = require("../queries/songs.js");
 
 //INDEX OF ALL SONGS
 songs.get("/", async (req, res) => {
@@ -16,20 +12,15 @@ songs.get("/", async (req, res) => {
   }
 });
 //SHOW ID
-songs.get("/:id", async (req, res) => {
+colors.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const targetSong = await getSong(id)
-  try {
+    const targetSong = await getSong(id);
     if (targetSong) {
-      console.log(targetSong);
       res.status(200).json(targetSong);
     } else {
-      res.status(404).json({ message: "Couldn't find your Jam" });
+      res.status(404).json({ error: "we no have color sir" });
     }
-  } catch (error) {
-    console.log(error);
-  }
-});
+  });;
 // create/post
 
 songs.post("/", async (req, res ) => {
@@ -39,6 +30,15 @@ songs.post("/", async (req, res ) => {
      res.json(song)
 });
 
-
+//Delete
+colors.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    const targetSong = await deleteSong(id);
+    if (targetSong) {
+      res.status(200).json(targetSong);
+    } else {
+      res.status(404).json({ error: "we no have color sir" });
+    }
+  });
 
 module.exports = songs;

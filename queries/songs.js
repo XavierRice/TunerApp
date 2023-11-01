@@ -11,7 +11,7 @@ const getAllSongs = async () => {
 
 const getSong = async (id) => {
   try {
-    const TargetSong = await db.one("SELECT * FROM colors WHERE id=$1", id);
+    const TargetSong = await db.one("SELECT * FROM Songs WHERE id=$1", id);
     return TargetSong;
   } catch (error) {
     return error;
@@ -30,7 +30,18 @@ const createSong = async (song) =>{
 }
 }
 
+const deleteSong = async ( id ) => {
+  try{
+     const deletedSong = await db.one(
+       "DELETE FROM Songs WHERE id=$1 RETURNING id=$1",
+       [id]
+     )
+     return deletedSong;
+  }catch (error){
+    return error;
+  }
+};
 
 module.exports = {
-  getAllSongs, getSong, createSong
+  getAllSongs, getSong, createSong, deleteSong
 };
