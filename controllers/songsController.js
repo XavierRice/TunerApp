@@ -12,7 +12,7 @@ songs.get("/", async (req, res) => {
   }
 });
 //SHOW ID
-colors.get("/:id", async (req, res) => {
+songs.get("/:id", async (req, res) => {
     const id = req.params.id;
     const targetSong = await getSong(id);
     if (targetSong) {
@@ -31,7 +31,7 @@ songs.post("/", async (req, res ) => {
 });
 
 //Delete
-colors.delete("/:id", async (req, res) => {
+songs.delete("/:id", async (req, res) => {
     const id = req.params.id;
     const targetSong = await deleteSong(id);
     if (targetSong) {
