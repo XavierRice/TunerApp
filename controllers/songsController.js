@@ -1,6 +1,6 @@
 const express = require("express");
 const songs = express.Router();
-const { getAllSongs } = require("../queries/songs.js");
+const { getAllSongs, getSong ,createSong } = require("../queries/songs.js");
 
 
 let allTheSongs = [];
@@ -17,10 +17,9 @@ songs.get("/", async (req, res) => {
 });
 //SHOW ID
 songs.get("/:id", async (req, res) => {
-    const allSongs = await getAllSongs();
-  try {
     const id = req.params.id;
-    const targetSong = allSongs.find((song) => song.id === parseInt(id));
+    const targetSong = await getSong(id)
+  try {
     if (targetSong) {
       console.log(targetSong);
       res.status(200).json(targetSong);
@@ -31,31 +30,15 @@ songs.get("/:id", async (req, res) => {
     console.log(error);
   }
 });
-// UPDATE/PUT
+// create/post
 
-songs.put("/:id", (req, res , next) => {
-  try {
-    const clientSongId = parseInt(req.params.id);
-    const songUpdate = req.body;
-    const targetSong = allSongs.find((song) => song.id === clientSongId);
-
-    if (!targetSong) {
-      console.log(clientSongId);
-      res.status(404).json({ message: "Couldn't find your Jam" });
-    } else {
-      console.log(targetSong);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+songs.post("/", async (req, res ) => {
+    const{ name , artist, album, time , is_favorite } = req.body;
+    const song = await createSong(req.body)
+    console.log(song)
+     res.json(song)
 });
 
 
-songs.post('/', (req, res) => {
-    const{ name , artist, album, time , is_favorite } = req.body;
-    
-    const sql = `INSERT INTO songs ( name, artist, album, time, is_favorite) VALUES ( ${name}, ${artist}, ${album}, ${time}, ${is_favorite});`
-    
-})
 
 module.exports = songs;
