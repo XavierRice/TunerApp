@@ -51,11 +51,11 @@ songs.put("/:id", (req, res , next) => {
 });
 
 
-// songs.post('/', (req, res) => {
-//     const{ name , artist, album, time , is_favorite } = req.body;
+songs.post('/', (req, res) => {
+    const{ name , artist, album, time , is_favorite } = req.body;
     
-//     const sql = 'INSERT INTO songs ( name, artist, album, time, is_favorite) VALUES 
+    const sql = `INSERT INTO songs ( name, artist, album, time, is_favorite) VALUES ( ${name}, ${artist}, ${album}, ${time}, ${is_favorite});`
     
-// })
+})
 
 module.exports = songs;
