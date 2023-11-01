@@ -8,6 +8,14 @@ const {
   updateSong,
 } = require("../queries/songs.js");
 
+const {
+  checkName,
+  checkAlbum,
+  checkArtist,
+  checkTime,
+  checkBoolean,
+} = require("../validations/checkSongs.js");
+
 //INDEX OF ALL SONGS
 songs.get("/", async (req, res) => {
   const allSongs = await getAllSongs();
@@ -30,12 +38,20 @@ songs.get("/:id", async (req, res) => {
 });
 
 // create/post
-songs.post("/", async (req, res) => {
-  const { name, artist, album, time, is_favorite } = req.body;
-  const song = await createSong(req.body);
-  console.log(song);
-  res.json(song);
-});
+songs.post(
+  "/",
+  checkName,
+  checkAlbum,
+  checkArtist,
+  checkTime,
+  checkBoolean,
+  async (req, res) => {
+    const { name, artist, album, time, is_favorite } = req.body;
+    const song = await createSong(req.body);
+    console.log(song);
+    res.json(song);
+  }
+);
 
 //Delete
 songs.delete("/:id", async (req, res) => {
@@ -49,10 +65,18 @@ songs.delete("/:id", async (req, res) => {
 });
 
 // UPDATE
-songs.put("/:id", async (req, res) => {
-  const { name, artist, album, time, is_favorite } = req.body;
-  const id = req.params.id;
-  const updatedSong = await updateSong(id, req.body);
-});
+// songs.put(
+//   "/:id",
+//   checkName,
+//   checkAlbum,
+//   checkArtist,
+//   checkTime,
+//   checkBoolean,
+//   async (req, res) => {
+//     const { name, artist, album, time, is_favorite } = req.body;
+//     const id = req.params.id;
+//     const updatedSong = await updateSong(id, req.body);
+//   }
+// );
 
 module.exports = songs;
