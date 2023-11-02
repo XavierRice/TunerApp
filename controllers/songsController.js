@@ -18,7 +18,9 @@ const {
 
 //INDEX OF ALL SONGS
 songs.get("/", async (req, res) => {
-  const allSongs = await getAllSongs();
+  const { order, is_favorite } = req.query;
+  console.log(req.query)
+  const allSongs = await getAllSongs(req.query);
   if (allSongs[0]) {
     res.status(200).json(allSongs);
   } else {
@@ -76,11 +78,12 @@ songs.put(
     const { name, artist, album, time, is_favorite } = req.body;
     const id = req.params.id;
     const updatedSong = await updateSong(id, req.body);
-      if(updatedSong.id){
-        res.status(200).json(updatedSong)
-      } else {
-        res.status(404).json({error: "me no can find song sir"})
-      }
-  });
+    if (updatedSong.id) {
+      res.status(200).json(updatedSong);
+    } else {
+      res.status(404).json({ error: "me no can find song sir" });
+    }
+  }
+);
 
 module.exports = songs;

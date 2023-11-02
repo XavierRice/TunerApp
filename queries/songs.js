@@ -1,11 +1,21 @@
 const db = require("../db/dbConfig.js");
 
-const getAllSongs = async () => {
+const getAllSongs = async (query) => {
+  const { order, is_favorite } = query;
   try {
-    const allSongs = await db.any("SELECT * FROM songs");
-    return allSongs;
+    if (order) {
+      const allSongs = await orderAllSongs(order);
+      return allSongs;
+    }
+    if (is_favorite) {
+      const allSongs = await favoriteSongs(is_favorite);
+      return allSongs;
+    } else {
+      const allSongs = await db.any("SELECT * FROM songs");
+      return allSongs;
+    }
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -14,7 +24,7 @@ const getSong = async (id) => {
     const TargetSong = await db.one("SELECT * FROM Songs WHERE id=$1", id);
     return TargetSong;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -38,50 +48,55 @@ const deleteSong = async (id) => {
     );
     return deletedSong;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
 const updateSong = async (id, song) => {
   try {
     const updatedSong = await db.one(
-      "UPDATE songs SET name=$1, artist=$2, album=$3 time=$4 is_favorite=$5 WHERE id=$6 RETURNING *",
+      "UPDATE songs SET name=$1, artist=$2, album=$3, time=$4, is_favorite=$5 WHERE id=$6 RETURNING *",
       [song.name, song.artist, song.album, song.time, song.is_favorite, id]
     );
     return updatedSong;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
-const OrderAllSongs = async (order) => {
+const orderAllSongs = async (order) => {
+  let sortedSongs;
   try {
-   if(order === "asc" ){
-     const sortedSongs = await db.any("SELECT * FROM songs ORDER by name ASC");
-   } else {
-     const sortedSongs = await db.any("SELECT * FROM songs ORDER by name DESC")
-   }
+    if (order === "asc") {
+      sortedSongs = await db.any("SELECT * FROM songs ORDER by name ASC");
+    } else {
+     sortedSongs = await db.any(
+        "SELECT * FROM songs ORDER by name DESC"
+      );
+    }
     return sortedSongs;
   } catch (error) {
     return error;
   }
 };
 
-const FavoriteSongs = async (boolen) => {
+const favoriteSongs = async (is_favorite) => {
+  let sortedSongs;
   try {
-   if(boolen === true ){
-     const sortedSongs = await db.any("SELECT * FROM songs WHERE is_favorite IS true");
-   } else {
-     const sortedSongs = await db.any("SELECT * FROM songs WHERE is_favorite IS false")
-   }
+    if (is_favorite === 'true') {
+       sortedSongs = await db.any(
+        "SELECT * FROM songs WHERE is_favorite IS true"
+      );
+    } else {
+       sortedSongs = await db.any(
+        "SELECT * FROM songs WHERE is_favorite IS false"
+      );
+    }
     return sortedSongs;
   } catch (error) {
     return error;
   }
 };
-
-
-
 
 module.exports = {
   getAllSongs,
