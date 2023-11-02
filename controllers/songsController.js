@@ -60,23 +60,27 @@ songs.delete("/:id", async (req, res) => {
   if (deletedSong.id) {
     res.status(200).json(deletedSong);
   } else {
-    res.status(404).json({ error: "we no have color sir" });
+    res.status(404).json({ error: "we no have color here sir" });
   }
 });
 
-// UPDATE
-// songs.put(
-//   "/:id",
-//   checkName,
-//   checkAlbum,
-//   checkArtist,
-//   checkTime,
-//   checkBoolean,
-//   async (req, res) => {
-//     const { name, artist, album, time, is_favorite } = req.body;
-//     const id = req.params.id;
-//     const updatedSong = await updateSong(id, req.body);
-//   }
-// );
+//UPDATE
+songs.put(
+  "/:id",
+  checkName,
+  checkAlbum,
+  checkArtist,
+  checkTime,
+  checkBoolean,
+  async (req, res) => {
+    const { name, artist, album, time, is_favorite } = req.body;
+    const id = req.params.id;
+    const updatedSong = await updateSong(id, req.body);
+      if(updatedSong.id){
+        res.status(200).json(updatedSong)
+      } else {
+        res.status(404).json({error: "me no can find song sir"})
+      }
+  });
 
 module.exports = songs;
