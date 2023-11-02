@@ -54,6 +54,31 @@ const updateSong = async (id, song) => {
   }
 };
 
+const OrderAllSongs = async (order) => {
+  try {
+   if(order === "asc" ){
+     const sortedSongs = await db.any("SELECT * FROM songs ORDER by name ASC");
+   } else {
+     const sortedSongs = await db.any("SELECT * FROM songs ORDER by name DESC")
+   }
+    return sortedSongs;
+  } catch (error) {
+    return error;
+  }
+};
+
+const FavoriteSongs = async (boolen) => {
+  try {
+   if(boolen === true ){
+     const sortedSongs = await db.any("SELECT * FROM songs WHERE is_favorite IS true");
+   } else {
+     const sortedSongs = await db.any("SELECT * FROM songs WHERE is_favorite IS false")
+   }
+    return sortedSongs;
+  } catch (error) {
+    return error;
+  }
+};
 
 
 
