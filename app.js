@@ -11,7 +11,7 @@ app.use('/songs', songsController)
 
 //Routes
 app.get('/', (req, res) => {
- res.send('Welcome to tuner')
+ res.send('Welcome to Tuner')
 });
 
 //404 Page

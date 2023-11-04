@@ -21,10 +21,10 @@ const getAllSongs = async (query) => {
 
 const getSong = async (id) => {
   try {
-    const TargetSong = await db.one("SELECT * FROM Songs WHERE id=$1", id);
+    const TargetSong = await db.one("SELECT * FROM Songs WHERE id=$1", [id]);
     return TargetSong;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -54,10 +54,14 @@ const deleteSong = async (id) => {
 
 const updateSong = async (id, song) => {
   try {
+    console.log("Updating song with ID:", id);
+    console.log("New song data:", song);
+
     const updatedSong = await db.one(
       "UPDATE songs SET name=$1, artist=$2, album=$3, time=$4, is_favorite=$5 WHERE id=$6 RETURNING *",
       [song.name, song.artist, song.album, song.time, song.is_favorite, id]
     );
+    console.log("Song updated successfully:", updatedSong);
     return updatedSong;
   } catch (error) {
     throw error;
@@ -70,9 +74,7 @@ const orderAllSongs = async (order) => {
     if (order === "asc") {
       sortedSongs = await db.any("SELECT * FROM songs ORDER by name ASC");
     } else {
-     sortedSongs = await db.any(
-        "SELECT * FROM songs ORDER by name DESC"
-      );
+      sortedSongs = await db.any("SELECT * FROM songs ORDER by name DESC");
     }
     return sortedSongs;
   } catch (error) {
@@ -83,12 +85,12 @@ const orderAllSongs = async (order) => {
 const favoriteSongs = async (is_favorite) => {
   let sortedSongs;
   try {
-    if (is_favorite === 'true') {
-       sortedSongs = await db.any(
+    if (is_favorite === "true") {
+      sortedSongs = await db.any(
         "SELECT * FROM songs WHERE is_favorite IS true"
       );
     } else {
-       sortedSongs = await db.any(
+      sortedSongs = await db.any(
         "SELECT * FROM songs WHERE is_favorite IS false"
       );
     }

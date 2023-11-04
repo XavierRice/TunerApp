@@ -19,9 +19,10 @@ const {
 //INDEX OF ALL SONGS
 songs.get("/", async (req, res) => {
   const { order, is_favorite } = req.query;
-  console.log(req.query)
+  
   const allSongs = await getAllSongs(req.query);
   if (allSongs[0]) {
+    console.log(allSongs)
     res.status(200).json(allSongs);
   } else {
     res.status(500).json({ status: "server error" });
@@ -32,10 +33,10 @@ songs.get("/", async (req, res) => {
 songs.get("/:id", async (req, res) => {
   const id = req.params.id;
   const targetSong = await getSong(id);
-  if (targetSong) {
+  if (targetSong.id) {
     res.status(200).json(targetSong);
   } else {
-    res.status(404).json({ error: "we no have color sir" });
+    res.status(404).json({"code":400});
   }
 });
 
@@ -62,7 +63,7 @@ songs.delete("/:id", async (req, res) => {
   if (deletedSong.id) {
     res.status(200).json(deletedSong);
   } else {
-    res.status(404).json({ error: "we no have color here sir" });
+    res.status(404).json({ error: "we no have song here sir" });
   }
 });
 
