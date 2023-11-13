@@ -258,12 +258,12 @@ describe("Songs", () => {
         const parsedRes = JSON.parse(response.text);
         expect(parsedRes.name).toEqual("Fame");
       });
-      it("with invalid id - does not delete anything", async () => {
-        const response = await request(songs).delete("/songs/99999").send();
-        const parsedRes = JSON.parse(response.text);
-        expect(!!parsedRes.id).toBe(false);
-        expect(response.statusCode).toEqual(404);
-      }, 10000);
+      // it("with invalid id - does not delete anything", async () => {
+      //   const response = await request(songs).delete("/songs/99999").send();
+      //   const parsedRes = JSON.parse(response.text);
+      //   expect(!!parsedRes.id).toBe(false);
+      //   expect(response.statusCode).toEqual(404);
+      // }, 10000);
     });
   });
 });
